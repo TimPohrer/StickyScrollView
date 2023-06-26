@@ -8,10 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.core.widget.NestedScrollView
-import com.amar.library.R
-import com.amar.library.provider.ResourceProvider
 import com.amar.library.provider.ScreenInfoProvider
-import com.amar.library.provider.interfaces.IResourceProvider
 import com.amar.library.provider.interfaces.IScreenInfoProvider
 import com.amar.library.ui.interfaces.IScrollViewListener
 import com.amar.library.ui.presentation.IStickyScrollPresentation
@@ -30,14 +27,9 @@ class StickyScrollView @JvmOverloads constructor(
 
     init {
         val screenInfoProvider: IScreenInfoProvider = ScreenInfoProvider(context)
-        val resourceProvider: IResourceProvider =
-            ResourceProvider(context, attributeSet, R.styleable.StickyScrollView)
-        mStickyScrollPresenter = StickyScrollPresenter(StickyScrollPresentation(), screenInfoProvider, resourceProvider)
+        mStickyScrollPresenter = StickyScrollPresenter(StickyScrollPresentation(), screenInfoProvider)
         onLayoutUpdate {
-            mStickyScrollPresenter.onGlobalLayoutChange(
-                R.styleable.StickyScrollView_stickyHeader,
-                R.styleable.StickyScrollView_stickyFooter
-            )
+            mStickyScrollPresenter.onGlobalLayoutChange()
         }
     }
 
@@ -99,11 +91,11 @@ class StickyScrollView @JvmOverloads constructor(
         this.scrollViewListener = scrollViewListener
     }
 
-    private fun initialiseHeader(){
+    private fun initialiseHeader() {
         mStickyScrollPresenter.initStickyHeader(stickyHeaderView?.top)
     }
 
-    private fun initialiseFooter(){
+    private fun initialiseFooter() {
         mStickyScrollPresenter.initStickyFooter(
             stickyFooterView?.measuredHeight,
             getFooterTop()
@@ -124,7 +116,7 @@ class StickyScrollView @JvmOverloads constructor(
         } ?: 0
     }
 
-    private inner class StickyScrollPresentation: IStickyScrollPresentation {
+    private inner class StickyScrollPresentation : IStickyScrollPresentation {
         override val currentScrollYPos: Int
             get() = scrollY
 

@@ -1,16 +1,12 @@
 package com.amar.library.ui.presenter
 
-import androidx.annotation.StyleableRes
-import com.amar.library.provider.interfaces.IResourceProvider
 import com.amar.library.provider.interfaces.IScreenInfoProvider
 import com.amar.library.ui.presentation.IStickyScrollPresentation
 
 internal class StickyScrollPresenter(
     stickyScrollPresentation: IStickyScrollPresentation,
-    private val screenInfoProvider: IScreenInfoProvider,
-    typedArrayResourceProvider: IResourceProvider
+    private val screenInfoProvider: IScreenInfoProvider
 ) {
-    private val mTypedArrayResourceProvider: IResourceProvider = typedArrayResourceProvider
     private val mStickyScrollPresentation: IStickyScrollPresentation = stickyScrollPresentation
     private val mDeviceHeight: Int = screenInfoProvider.screenHeight
     private var mStickyFooterHeight = 0
@@ -24,19 +20,10 @@ internal class StickyScrollPresenter(
     var isHeaderSticky = false
         private set
     var mScrolled = false
-    fun onGlobalLayoutChange(@StyleableRes headerRes: Int, @StyleableRes footerRes: Int) {
+    fun onGlobalLayoutChange() {
         val currentNavBarHeight = screenInfoProvider.navigationBarHeight
         navBarHeightDiff = mNavigationBarInitialHeight - currentNavBarHeight
         mNavigationBarInitialHeight = currentNavBarHeight
-        val resources = mTypedArrayResourceProvider.getResourcesByIds(headerRes, footerRes)
-        val headerId = resources[0]
-        if (headerId != 0) {
-            mStickyScrollPresentation.initHeaderView(headerId)
-        }
-        val footerId = resources[1]
-        if (footerId != 0) {
-            mStickyScrollPresentation.initFooterView(footerId)
-        }
     }
 
     fun initStickyFooter(measuredHeight: Int?, initialStickyFooterLocation: Int) {
